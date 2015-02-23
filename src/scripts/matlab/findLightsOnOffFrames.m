@@ -2,27 +2,27 @@
 % Date: Feb 2015
 % function: based on the change in the intensity it finds
 % on and off periods
-function [ lightOns lightOffs averageIntencity] = findLightsOnOffFrames( firstFrame, lastFrame,pathToTif)
+function [ lightOns lightOffs averageIntensity] = findLightsOnOffFrames( firstFrame, lastFrame,pathToTif,roi)
 
-    roi.x = 200;
-    roi.y = 200;
-    roi.width = 5;
-    roi.height = 5;
-
-    averageIntencity = zeros(1, lastFrame-firstFrame + 1);
+    averageIntensity = zeros(1, lastFrame-firstFrame + 1);
 
     for fn = firstFrame:lastFrame
         img1 = readFrame(fn, pathToTif, roi);
-        averageIntencity(fn) = mean2(img1);
+        averageIntensity(fn) = mean2(img1);
     end
 
-    diffAv = diff(averageIntencity);
-    minDiffAve = min(diffAv); % negative number
-    maxDiffAve = max(diffAv); % positive number
-
-    % they both have to have the same length
-    lightOns = find(diffAv>0.7*maxDiffAve);
-    lightOffs = find(diffAv<0.7*minDiffAve);
+    isLightOn = zeros(size(averageIntensity));
+    isLightOn(find(averageIntensity>mean(averageIntensity) + std(averageIntensity))) = 1;
+    lightOns = find(diff(isLightOn)>0);
+    lightOffs = find(diff(isLightOn)<0); 
+ 
+%     diffAv = diff(averageIntensity);
+%     minDiffAve = min(diffAv); % negative number
+%     maxDiffAve = max(diffAv); % positive number
+% 
+%     % they both have to have the same length
+%     lightOns = find(diffAv>100);%0.7*maxDiffAve);
+%     lightOffs = find(diffAv<-100);%0.7*minDiffAve);
 
 end
 
