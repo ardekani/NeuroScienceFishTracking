@@ -31,12 +31,6 @@ roi.y = 1;
 roi.width = 362;
 roi.height = 344;
 
-if (0)
-    tic;
-    [lightOns, lightOffs, averageIntensity] = findLightsOnOffFrames(firstFrame, lastFrame, pathToTif, roi);
-    t = toc;
-end;
-
 bg = returnBackgroundModel(pathToTif, roi, firstFrame,lastFrame,stepSize);
 
 se = strel('ball',2,2);
@@ -68,6 +62,6 @@ end
 roi_text = strcat(num2str(roi.x),'_',num2str(roi.y),'_',num2str(roi.width),'_', num2str(roi.height));
 
 csvwrite(strcat(pathToTif, '/allInfo_',roi_text,'.csv'), allInfo);
-t = toc
+
 
 
