@@ -19,8 +19,8 @@ figureHandle = figure;
 % make this num better.. will fail
 num = ceil(sqrt(length(lightOns)));
 
-xPos = trackLeft(:,3);
-yPos = trackLeft(:,4);
+xPos = trackLeft(:,4); % switched x and y 
+yPos = trackLeft(:,3);
 
 halfTime = 180;
 for ll = 1:length(lightOns)

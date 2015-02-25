@@ -33,8 +33,8 @@ pathToTif_all{3} = '/Users/rezadehestaniardekani/Desktop/ForReza_2_20_2015/PreTr
 
 pathToTif_all{4} = '/Users/rezadehestaniardekani/Desktop/ForReza_2_20_2015/Test1_1/Pos0/';
 
-roi_text{1} = 'leftChamber';
-roi_text{2} = 'rightChamber';
+roi_text{1} = 'leftChamberNew';
+roi_text{2} = 'rightChamberNew';
 
 for pp = 1:length(pathToTif_all)
     pathToTif = pathToTif_all{pp};

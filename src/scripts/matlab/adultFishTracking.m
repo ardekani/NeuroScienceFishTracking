@@ -8,7 +8,7 @@ roiLeft.y = 1;
 roiLeft.width= 324;
 roiLeft.height = 344;
 
-roiRight.x = 1;
+roiRight.x = 335;
 roiRight.y = 1;
 roiRight.width = 362;
 roiRight.height = 344;
@@ -50,9 +50,9 @@ for rr = 1:length(roiList)
     end
     roi_text = strcat(num2str(roi.x),'_',num2str(roi.y),'_',num2str(roi.width),'_', num2str(roi.height));
     if (rr==1)
-        roi_text='leftChamber';
+        roi_text='leftChamberNew';
     else
-        roi_text = 'rightChamber';
+        roi_text = 'rightChamberNew';
     end
     
     csvwrite(strcat(pathToTif, '/allInfo_',roi_text,'.csv'), allInfo);
