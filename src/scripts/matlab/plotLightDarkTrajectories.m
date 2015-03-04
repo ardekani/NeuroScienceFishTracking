@@ -20,7 +20,7 @@ figureHandle = figure;
 num = ceil(sqrt(length(lightOns)));
 
 xPos = trackLeft(:,4); % switched x and y 
-yPos = trackLeft(:,3);
+yPos = 350 - trackLeft(:,3); % swithced up and down
 
 halfTime = 180;
 for ll = 1:length(lightOns)
@@ -50,9 +50,10 @@ for ll = 1:length(lightOns)
     xlim([1 350]);
     ylim([1 350]);
     legend('before light', 'during light', 'after light', 'location','northwest');
-    xlabel('X(pixels)')
-    ylabel('Y(pixels)')
-    title(figTitle);
+    xlabel('X(pixels)');
+    ylabel('Y(pixels)');
+    
+    title(strcat(figTitle,num2str(ll)));
     grid on;
     hold off;
     figFileName = strcat(figTitle,num2str(ll),'.tif');

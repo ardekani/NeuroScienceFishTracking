@@ -26,9 +26,15 @@ function [allSegmentsVel] = extractInfoFromTrajectories(trajFile)
         Vbefore = V(darkIndx1);
         Vafter = V(darkIndx2);
         Vduring = V(lightIndx);
+        
+        %to make all vectors the same length.. will remove it afterwards
+       maxLength = max(max(length(Vbefore),length(Vduring)),length(Vafter));
+       Vbefore = [Vbefore;repmat(-1,maxLength-length(Vbefore),1)];
+       Vafter  = [Vafter; repmat(-1,maxLength-length(Vafter),1)];
+       Vduring = [Vduring;repmat(-1,maxLength-length(Vduring),1)]; 
         %TODO: FIX THIS!!
-        if (length(Vbefore) == length(Vduring) && length(Vafter)==length(Vduring))
-            allSegmentsVel{ll} = [Vbefore, Vduring, Vafter]; 
-        end
+%         if (length(Vbefore) == length(Vduring) && length(Vafter)==length(Vduring))
+             allSegmentsVel{ll} = [Vbefore, Vduring, Vafter]; 
+%         end
     end
 end

@@ -18,15 +18,13 @@ for rr = 1:length(roiList)
     
     roi= roiList{rr};
     bg = returnBackgroundModel(pathToTif, roi, firstFrame,lastFrame,stepSize);
-    
-    se = strel('ball',2,2);
+
     allInfo = zeros(lastFrame-firstFrame + 1,5);
-    tic
     for fn = firstFrame:lastFrame
-        %for fn = 2500:2600
         img = readFrame(fn, pathToTif, roi);
         changeMask = uint16(bg - double(img));
-        
+%         imshow(changeMask,[]);
+%         pause(0.2);
         changeMaskThresh = zeros(size(changeMask));
         %TODO: make this threshold accessable
         changeMaskThresh(find(changeMask>5000)) = 1;
