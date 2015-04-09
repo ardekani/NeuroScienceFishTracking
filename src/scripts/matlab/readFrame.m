@@ -13,7 +13,7 @@ function [ img ] = readFrame( frameNumber,pathToTif, roi)
     
         img = imread(fname,'PixelRegion',{[roi.y,roi.y+ roi.height], [roi.x , roi.x+roi.width]});
     else
-        display(strcat(frameStr, '  is not there\n'));
+        display(strcat(fname, '  is not there\n'));
         img = -1*ones(2,2);
     end;
 

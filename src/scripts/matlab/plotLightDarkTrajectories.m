@@ -1,9 +1,20 @@
 function [figureHandle figTitle] = plotLightDarkTrajectories(filename)
 
-[lightOns, lightOffs, averageIntensity] = findLightsOnOffFrames(filename);
+%[lightOns, lightOffs, averageIntensity] = findLightsOnOffFrames(filename);
+
+    load('lightOnOffInfo.mat');
+    if(~isempty(strfind(filename,'2015-03-27_essay1')))
+        pp = 1;
+    elseif (~isempty(strfind(filename,'2015-03-30_essay1')))
+        pp=2;
+    elseif (~isempty(strfind(filename,'2015-03-31_essay1')))
+        pp = 3;
+    end
+    lightOns = lightOnAll{pp};
+    lightOffs = lightOffAll{pp};
 
 trackLeft = csvread(filename);
-tmp = strsplit(filename,'/');
+tmp = strsplit(filename,'\');
 expName = tmp(length(tmp)-2);
 [a b c] = fileparts(filename);
 
@@ -21,8 +32,11 @@ num = ceil(sqrt(length(lightOns)));
 
 xPos = trackLeft(:,4); % switched x and y 
 yPos = 350 - trackLeft(:,3); % swithced up and down
+%yPos = (max(trackLeft(:,3))+20) - trackLeft(:,3); % swithced up and down
 
-halfTime = 180;
+%halfTime = 180;
+halfTime = floor(mean(lightOffs-lightOns)/2);
+
 for ll = 1:length(lightOns)
 %     subplot(num,num-1,ll);
 %     axis square;
@@ -53,10 +67,10 @@ for ll = 1:length(lightOns)
     xlabel('X(pixels)');
     ylabel('Y(pixels)');
     
-    title(strcat(figTitle,num2str(ll)));
+    title(strcat(figTitle,'-cycle-',num2str(ll)));
     grid on;
     hold off;
-    figFileName = strcat(figTitle,num2str(ll),'.tif');
+    figFileName = strcat(figTitle,'-cycle-',num2str(ll),'.tif');
     saveas(h,figFileName);
 end
 
