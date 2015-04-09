@@ -83,8 +83,10 @@ int main(int argc, char** argv)
 	//std::string directory = "E:\\assey2\\Sample_data\\Larvae_TestingZoom_forReza\\Zoom 2 - Middle\\LeftFish1_1\\Pos0\\";
 	Mat image;
 	int frameNumber = 1;
+	int firstFrame = 1;
+	int lastFrame = 499;
 	cv::Mat bg;
-	calculateBackgroundModel(1, 499, 10, bg);
+	calculateBackgroundModel(firstFrame, lastFrame, 10, bg);
 	//cv::imshow("calculated BG", bg);
 	//getchar();
 
@@ -98,67 +100,84 @@ int main(int argc, char** argv)
 	//	}
 	//}
 
+
+	VideoWriter outputVideo;
+	
+	readframe(0, image);
+	cv:Size s = image.size();
+	outputVideo.open("output.avi", -1, 25.0, s);
+
 	for (int frameNumber = 0; frameNumber < 499; frameNumber++)
 	{
 		//ofstream fn;
 		//fn.open("output.csv");
+		//fn << cv::format(diff, "CSV");
+		//fn.close();
+		//getchar();
+
 		if (!readframe(frameNumber, image))
 		{
 			cv::Mat diff = bg - image;
-			cv::imshow("Display window", diff);
-			//fn << cv::format(diff, "CSV");
-			//fn.close();
-			//getchar();
+			//cv::imshow("Display window", diff);
 			Mat canny_output;
-			vector<vector<Point> > contours;
-			vector<Vec4i> hierarchy;
-			int thresh = 50;
+			int cannythresh = 50;
+			int simpleThresh = 10;
 			RNG rng(12345);
 			cv::Mat _img;
 			//cv::threshold(diff, _img, 0, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
-			cv::threshold(diff, _img, 10, 255, CV_THRESH_BINARY);
+			cv::threshold(diff, _img, simpleThresh, 255, CV_THRESH_BINARY);
 
-			
-
-
-			imshow("_img", _img);
+			//imshow("_img", _img);
 
 			//cvWaitKey(-1);
 
-			Canny(diff, canny_output, thresh, thresh * 2, 3);
+			//Canny(diff, canny_output, thresh, thresh * 2, 3);
 			/// Find contours
 			//findContours(canny_output, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
 
+			vector<vector<Point> > contours;
+			vector<Vec4i> hierarchy;
 			findContours(_img, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
-			for (int i = 0; i < contours.size(); i++)
-			{
-				std::cout << "contour[" << i << "].size() = " << contours[i].size() << std::endl;;
 
+			//for (int i = 0; i < contours.size(); i++)
+			//{
+			//	std::cout << "contour[" << i << "].size() = " << contours[i].size() << std::endl;;
+			//}
 
-			}
 			/// Draw contours
-			Mat drawing = Mat::zeros(canny_output.size(), CV_8UC3);
-			for (int i = 0; i< contours.size(); i++)
-			{
-				Scalar color = Scalar(rng.uniform(0, 255), rng.uniform(0, 255), rng.uniform(0, 255));
-				drawContours(drawing, contours, i, color, 2, 8, hierarchy, 0, Point());
-			}
+			//Mat drawing = Mat::zeros(canny_output.size(), CV_8UC3);
+			//for (int i = 0; i< contours.size(); i++)
+			//{
+			//	Scalar color = Scalar(rng.uniform(0, 255), rng.uniform(0, 255), rng.uniform(0, 255));
+			//	drawContours(drawing, contours, i, color, 2, 8, hierarchy, 0, Point());
+			//}
 
-			Mat biggest = Mat::zeros(canny_output.size(), CV_8UC3);
-			cv::Point pos;
-			
+			//Mat biggest = Mat::zeros(canny_output.size(), CV_8UC3);
+			//cv::Point pos;
+			//
+			//returnThePosition(contours, pos);
+			//circle(biggest, pos, 4, cv::Scalar(255, 0, 0), 1);
+			//imshow("BIGGEST", biggest);
 			returnThePosition(contours, pos);
-			circle(biggest, pos, 4, cv::Scalar(255, 0, 0), -1);
-			imshow("BIGGEST", biggest);
+			circle(image, pos, 4, cv::Scalar(255, 0, 0), 1);
+			size_t height = image.size().height;
+			size_t width = image.size().height;
 
+			if (outputVideo.isOpened())
+			{
+				outputVideo << image;
+
+			}
 			/// Show in a window
-			namedWindow("Contours", CV_WINDOW_AUTOSIZE);
-			imshow("Contours", drawing);
+			//namedWindow("Contours", CV_WINDOW_AUTOSIZE);
+			//imshow("Contours", drawing);
 
 			std::cout << "frame : " << frameNumber << std::endl;
 
 			cv::waitKey(1);
 		}
+		//outputVideo.release();
+
 	}
 
 	
