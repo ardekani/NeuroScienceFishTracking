@@ -8,3 +8,4 @@
 *.tlog
 *.log
 *.sdf
+src/c++/fishLearning/fishLearning/output.csv

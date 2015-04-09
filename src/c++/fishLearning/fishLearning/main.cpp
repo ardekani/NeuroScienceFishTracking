@@ -4,12 +4,13 @@
 #include "opencv2/highgui/highgui.hpp"
 #include <iostream>
 #include <fstream>
+#include <vector>
 using namespace cv;
 using namespace std;
 
-//std::string directoryName = "E:\\assey2\\Sample_data\\Larvae_TestingZoom_forReza\\Zoom 2 - Middle\\LeftFish1_1\\Pos0\\";
-
-std::string directoryName = "E:\\assey2\\Sample_data\\Larvae_TestingZoom_forReza\\Zoom 3 - Farthest\\BottomFish_1\\Pos0\\";
+std::string directoryName = "E:\\assey2\\Sample_data\\Larvae_TestingZoom_forReza\\Zoom 2 - Middle\\LeftFish1_1\\Pos0\\";
+//std::string directoryName = "E:\\Reza\\fish_learning\\assey2\\Sample_data\\Larvae_TestingZoom_forReza\\Zoom 2 - Middle\\LeftFish1_1\\Pos0\\";
+//std::string directoryName = "E:\\assey2\\Sample_data\\Larvae_TestingZoom_forReza\\Zoom 3 - Farthest\\BottomFish_1\\Pos0\\";
 
 //std::string directoryName = "E:\\assey2\\Sample_data\\Larvae_TestingZoom_forReza\\Zoom 1 - Closest\\LeftToRightCross1_1\\Pos0\\";
 
@@ -27,6 +28,33 @@ int readframe(int frameNumber, cv::Mat& frame)
 	return 0;
 }
 
+int returnThePosition(std::vector < std::vector < cv::Point >> allContours, cv::Point &pos)
+{
+	std::cout << "i am here" << std::endl;
+	if (allContours.size() < 1) //contour list is empty
+	{
+		pos.x = 0;
+		pos.y = 0;
+		std::cout << "did not find the fish\n";
+		return -1;
+	}
+	//first find the largest contour
+	size_t maxLenID = 0;
+	for (size_t i = 1; i < allContours.size(); i++)
+	{
+		if (allContours[i].size()>allContours[maxLenID].size())
+		{
+			maxLenID = i;
+		}
+	}
+	//now find the center of the contour - using cvRect
+	cv::Rect rct = cv::boundingRect(Mat(allContours[maxLenID]));
+	pos.x = rct.x + rct.width / 2;
+	pos.y = rct.y + rct.height / 2;
+
+	return 0;
+}
+
 int calculateBackgroundModel(int firstFrame, int lastFrame, int NumOfFramesToUse, cv::Mat &m_currBackGroundModel)
 {
 	cv::Mat curFrame;
@@ -39,13 +67,13 @@ int calculateBackgroundModel(int firstFrame, int lastFrame, int NumOfFramesToUse
 		readframe(i, curFrame);
 		cv::addWeighted(curFrame, 1.0 / (countRun + 1), m_currBackGroundModel, 1.0*countRun / (countRun + 1), 0.0, m_currBackGroundModel);
 		cv::imshow("aa", curFrame);
-		cv::imshow("bg", m_currBackGroundModel);
-		cvWaitKey(10);
+//		cv::imshow("bg", m_currBackGroundModel);
+		cvWaitKey(1);
 		countRun++;
 	}
 
-	cv::imshow("final background", m_currBackGroundModel);
-	cvWaitKey(-1);
+//	cv::imshow("final background", m_currBackGroundModel);
+//	cvWaitKey(-1);
 
 	return 0;
 }
@@ -72,8 +100,8 @@ int main(int argc, char** argv)
 
 	for (int frameNumber = 0; frameNumber < 499; frameNumber++)
 	{
-		ofstream fn;
-		fn.open("output.csv");
+		//ofstream fn;
+		//fn.open("output.csv");
 		if (!readframe(frameNumber, image))
 		{
 			cv::Mat diff = bg - image;
@@ -116,13 +144,20 @@ int main(int argc, char** argv)
 				drawContours(drawing, contours, i, color, 2, 8, hierarchy, 0, Point());
 			}
 
+			Mat biggest = Mat::zeros(canny_output.size(), CV_8UC3);
+			cv::Point pos;
+			
+			returnThePosition(contours, pos);
+			circle(biggest, pos, 4, cv::Scalar(255, 0, 0), -1);
+			imshow("BIGGEST", biggest);
+
 			/// Show in a window
 			namedWindow("Contours", CV_WINDOW_AUTOSIZE);
 			imshow("Contours", drawing);
 
 			std::cout << "frame : " << frameNumber << std::endl;
 
-			cv::waitKey(30);
+			cv::waitKey(1);
 		}
 	}
 
