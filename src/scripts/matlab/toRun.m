@@ -45,9 +45,9 @@ for pp = 1:length(pathToTif_all)
 
     for rt = 1:length(roi_text)
         tmptxt = roi_text{rt};
-        csvFileName = strcat(pathToTif, 'allInfo_',tmptxt,'.csv');
+        csvFileName = strcat(pathToTif, 'allInfo_',tmptxt,'.csv')
         %plotLightDarkTrajectories(csvFileName);
-        plotBoxPlots(csvFileName);
+        %plotBoxPlots(csvFileName);
             
     end
 end

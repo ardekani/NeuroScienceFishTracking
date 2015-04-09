@@ -20,8 +20,16 @@ for rr = 1:length(roiList)
     bg = returnBackgroundModel(pathToTif, roi, firstFrame,lastFrame,stepSize);
 
     allInfo = zeros(lastFrame-firstFrame + 1,5);
-    for fn = firstFrame:lastFrame
+    %for fn = firstFrame:lastFrame
+    %for fn = 2186:2726
+    for fn = 1517:2056
+        frameStr = num2str(fn,'%.9d');
+        fname = strcat('orig_img_',frameStr,'_Default_000.png');
         img = readFrame(fn, pathToTif, roi);
+        h1 = figure;
+        imshow(img,[]);
+        saveas(h1, fname);
+        close(h1);
         changeMask = uint16(bg - double(img));
 %         imshow(changeMask,[]);
 %         pause(0.2);
@@ -42,10 +50,22 @@ for rr = 1:length(roiList)
 %         plot(allInfo(fn,4), allInfo(fn,3),'o', 'linewidth',2);
 %         pause(0.2);
 %         hold off;
+        frameStr = num2str(fn,'%.9d');
+        fname = strcat('output_img_',frameStr,'_Default_000.png');
+        h = figure;
+        imshow(changeMaskThresh,[]);
+        hold on;
+        plot(allInfo(fn,4), allInfo(fn,3),'.', 'MarkerSize',20);
+        saveas(h,fname); % will create FIG1, FIG2,...
+        hold off;
+        close (h);
+    
         if ~(mod(fn,1000))
-        display(fn)
+            display(fn)
         end
+    
     end
+    
     roi_text = strcat(num2str(roi.x),'_',num2str(roi.y),'_',num2str(roi.width),'_', num2str(roi.height));
     if (rr==1)
         roi_text='leftChamberNew';
