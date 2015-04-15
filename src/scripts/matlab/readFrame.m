@@ -1,11 +1,10 @@
 % Author: Reza Ardekani
 % Date: Feb 2015
-% Function: returns an image from image sequences..
-% TODO: Params..
-% TODO: have a better return value!ß
+% Function: returns an image from image sequences 
+% The filename pattern for each frame is img_ddddddddd_Default_000.tif
+% TODO: have a better return value in the case of failure
 
 function [ img ] = readFrame( frameNumber,pathToTif, roi)
-%readFrame: loads tif file
     frameStr = num2str(frameNumber,'%.9d');
     fname = strcat(pathToTif,'img_',frameStr,'_Default_000.tif');
     
