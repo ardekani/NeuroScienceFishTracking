@@ -6,13 +6,13 @@ function plotBoxPlots(trajFile)
     allVafter = [];
     h = figure;
     [a b c] = fileparts(trajFile);
-    tmp = strsplit(trajFile,'/');
-    expName = tmp(length(tmp)-2);
+    tmp = strsplit(trajFile,'\');
+    expName = tmp(length(tmp)-3);
     [a b c] = fileparts(trajFile);
     figTitle = char(strcat(expName,b));
     figTitle = strrep(figTitle, '_', '-');
     figTitle = strrep(figTitle, 'allInfo', '');
-    figTitle = figTitle(1:(length(figTitle)-10));
+    %figTitle = figTitle(1:(length(figTitle)-10));
 
     for ii = 1:length(segVel)
         curBvel = segVel{ii}(:,1);curBvel(find(curBvel<0)) = [];
@@ -33,7 +33,7 @@ function plotBoxPlots(trajFile)
 
         boxplot(curVel, lbls,'colors',['b','g','k']);
         ylabel('Velocity (px/frame)');
-        title( strcat(figTitle,num2str(ii)) );
+        title( strcat(figTitle,'-cycle-',num2str(ii)) );
         hold on;
         %mx = mean([curBvel curDvel curAvel]);
         mx   = [mean(curBvel), mean(curDvel),mean(curAvel)];

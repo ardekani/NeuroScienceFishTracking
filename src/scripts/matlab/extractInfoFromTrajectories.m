@@ -6,8 +6,22 @@ function [allSegmentsVel] = extractInfoFromTrajectories(trajFile)
     vv = diff(xPos).^2 + diff(yPos).^2;
     V = sqrt(vv);
     V = [V;V(length(V))];
-    [lightOns, lightOffs, averageIntensity] = findLightsOnOffFrames(trajFile);
-    halfTime = 180; %TODO : make it an input arguement
+    % TODO: fix  the findlightsOnOff
+    %[lightOns, lightOffs, averageIntensity] = findLightsOnOffFrames(trajFile);
+    %halfTime = 180; %TODO : make it an input arguement
+    load('lightOnOffInfo.mat');
+    if(~isempty(strfind(trajFile,'2015-03-27_essay1')))
+        pp = 1;
+    elseif (~isempty(strfind(trajFile,'2015-03-30_essay1')))
+        pp=2;
+    elseif (~isempty(strfind(trajFile,'2015-03-31_essay1')))
+        pp = 3;
+    end
+    lightOns = lightOnAll{pp};
+    lightOffs = lightOffAll{pp};
+        
+    
+    halfTime = floor(mean(lightOffs-lightOns)/2);
     allSegmentsVel = [];
     for ll = 1:length(lightOns)
         on  = lightOns(ll);
